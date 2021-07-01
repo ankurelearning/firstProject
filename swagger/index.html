@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>
+    REST Everywhere Swagger Docs
+  </title>
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700"
+    rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.28.0/swagger-ui.css">
+  <style>
+    html {
+      box-sizing: border-box;
+      overflow: -moz-scrollbars-vertical;
+      overflow-y: scroll;
+    }
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
+
+    body {
+      margin: 0;
+      background: #fafafa;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="swagger-ui"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.28.0/swagger-ui-bundle.js"> </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.28.0/swagger-ui-standalone-preset.js"> </script>
+  <script>
+    window.onload = function () {
+
+      var spec = {
+        "openapi": "3.0.2",
+        "info": {
+          "title": "CMS PAM Service",
+          "version": "0.1.0"
+        },
+        "servers": [{
+          "url": "https://pam.dev.cms.cloud.teradata.com"
+          //  "url" : "https://gw5l32kfs8.execute-api.us-west-2.amazonaws.com/"
+
+        }],
+        "components": {
+          "securitySchemes": {
+            "ApiKeyAuth": {
+              "type": "apiKey",
+              "name": "x-api-key",
+              "in": "header",
+              "x-amazon-apigateway-authtype": "awsSigv4"
+            },
+            "sigv4": {
+              "type": "apiKey",
+              "name": "Authorization",
+              "in": "header",
+              "x-amazon-apigateway-authtype": "awsSigv4"
+            }
+          }
+        },
+        "paths": {
+          "/testing/sites": {
+            "get": {
+              "security": [{
+                "sigv4": []
+              }],
+              "tags": ["PAM Service"],
+              "summary": "Return a list of sites onboarded to Centrify PAS",
+              "responses": {
+                "200": {
+                  "description": "Successful Response, OK",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "site_id": {
+                              "type": "string"
+                            },
+                            "pas_status": {
+                              "type": "string"
+                            },
+                            "platform": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/testing/sites/{site_id}": {
+            "get": {
+              "security": [{
+                "sigv4": []
+              }],
+              "tags": ["PAM Service"],
+              "summary": "Return status of Centrify PAS of this site, including whether we have SQLE ecosystem support and/or k8s support.",
+              "parameters": [{
+                "required": true,
+                "schema": {
+                  "title": "Site id",
+                  "type": "string"
+                },
+                "name": "site_id",
+                "in": "path"
+              }],
+              "responses": {
+                "200": {
+                  "description": "Successful Response, OK",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "site_id": {
+                              "type": "string"
+                            },
+                            "platform": {
+                              "type": "string"
+                            },
+                            "region": {
+                              "type": "string"
+                            },
+                            "connectors": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "status": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            },
+                            "nodes": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "status": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            },
+                            "k8s_support_host": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "status": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            },
+                            "db_support_host": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "status": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "patch": {
+              "tags": ["PAM Service"],
+              "summary": "Return status of Centrify PAS of this site, including whether we have SQLE ecosystem support and/or k8s support.",
+              "parameters": [{
+                "required": true,
+                "schema": {
+                  "title": "Site id",
+                  "type": "string"
+                },
+                "name": "site_id",
+                "in": "path"
+              }],
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "centrify_version": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Successful Response, OK",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "site_id": {
+                            "type": "string"
+                          },
+                          "platform": {
+                            "type": "string"
+                          },
+                          "region": {
+                            "type": "string"
+                          },
+                          "job_id": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/sites/{site_id}/connectors": {
+            "patch": {
+              "tags": ["PAM Service"],
+              "summary": "Return status of Centrify PAS of this site, including whether we have SQLE ecosystem support and/or k8s support.",
+              "parameters": [{
+                "required": true,
+                "schema": {
+                  "title": "Site id",
+                  "type": "string"
+                },
+                "name": "site_id",
+                "in": "path"
+              }],
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "site_id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Successful Response, OK",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "site_id": {
+                            "type": "string"
+                          },
+                          "platform": {
+                            "type": "string"
+                          },
+                          "region": {
+                            "type": "string"
+                          },
+                          "job_id": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/sites/{site_id}/k8s-support-host": {
+            "patch": {
+              "tags": ["PAM Service"],
+              "summary": "Return status of Centrify PAS of this site, including whether we have SQLE ecosystem support and/or k8s support.",
+              "parameters": [{
+                "required": true,
+                "schema": {
+                  "title": "Site id",
+                  "type": "string"
+                },
+                "name": "site_id",
+                "in": "path"
+              }],
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "site_id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Successful Response, OK",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "site_id": {
+                            "type": "string"
+                          },
+                          "platform": {
+                            "type": "string"
+                          },
+                          "region": {
+                            "type": "string"
+                          },
+                          "job_id": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/sites/{site_id}/db-support-host": {
+            "patch": {
+              "tags": ["PAM Service"],
+              "summary": "Return status of Centrify PAS of this site, including whether we have SQLE ecosystem support and/or k8s support.",
+              "parameters": [{
+                "required": true,
+                "schema": {
+                  "title": "Site id",
+                  "type": "string"
+                },
+                "name": "site_id",
+                "in": "path"
+              }],
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "site_id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Successful Response, OK",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "site_id": {
+                            "type": "string"
+                          },
+                          "platform": {
+                            "type": "string"
+                          },
+                          "region": {
+                            "type": "string"
+                          },
+                          "job_id": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/sites/job/{job_id}": {
+            "get": {
+              "security": [{
+                "ApiKeyAuth": []
+              }],
+              "tags": ["PAM Service"],
+              "summary": "Return job info and status.",
+              "parameters": [{
+                "required": true,
+                "schema": {
+                  "title": "Job id",
+                  "type": "string"
+                },
+                "name": "job_id",
+                "in": "path"
+              }],
+              "responses": {
+                "200": {
+                  "description": "Successful Response, OK",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "site_id": {
+                            "type": "string"
+                          },
+                          "platform": {
+                            "type": "string"
+                          },
+                          "region": {
+                            "type": "string"
+                          },
+                          "job_id": {
+                            "type": "string"
+                          },
+                          "snow_request": {
+                            "type": "string"
+                          },
+                          "service_endpoint": {
+                            "type": "string"
+                          },
+                          "request_body": {
+                            "type": "object",
+                            "properties": {
+                              "site_id": {
+                                "type": "string"
+                              },
+                              "action": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "start_time": {
+                            "type": "string"
+                          },
+                          "finish_time": {
+                            "type": "string"
+                          },
+                          "job_arn": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "job_output": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/sites/connectors": {
+            "post": {
+              "security": [{
+                "sigv4": []
+              }],
+              "tags": ["PAM Service"],
+              "summary": "Store the provision information in the DynamoDB table pam_site_status, including job id and status.",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "site_id": {
+                          "type": "string"
+                        },
+                        "platform": {
+                          "type": "string"
+                        },
+                        "platform_params": {
+                          "type": "object",
+                          "properties": {
+                            "aws_region": {
+                              "type": "string"
+                            },
+                            "aws_customer_account_id": {
+                              "type": "string"
+                            },
+                            "aws_subnet_id": {
+                              "type": "string"
+                            },
+                            "aws_security_group_id": {
+                              "type": "string"
+                            },
+                            "aws_key_name": {
+                              "type": "string"
+                            },
+                            "gcp_region": {
+                              "type": "string"
+                            },
+                            "gcp_zone": {
+                              "type": "string"
+                            },
+                            "gcp_project": {
+                              "type": "string"
+                            },
+                            "gcp_subnet_name": {
+                              "type": "string"
+                            },
+                            "gcp_compute_network_name": {
+                              "type": "string"
+                            },
+                            "azure_region": {
+                              "type": "string"
+                            },
+                            "azure_subscription_id": {
+                              "type": "string"
+                            },
+                            "azure_virtual_network": {
+                              "type": "string"
+                            },
+                            "azure_subnet_name": {
+                              "type": "string"
+                            },
+                            "azure_resource_group": {
+                              "type": "string"
+                            },
+                            "azure_ip_config_name": {
+                              "type": "string"
+                            },
+                            "azure_admin_user": {
+                              "type": "string"
+                            },
+                            "azure_admin_password": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Successful Response, OK",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "site_id": {
+                            "type": "string"
+                          },
+                          "platform": {
+                            "type": "string"
+                          },
+                          "sf_execution_arn": {
+                            "type": "string"
+                          },
+                          "job_id": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "delete": {
+              "tags": ["PAM Service"],
+              "summary": "Store the provision information in the DynamoDB table pam_site_status, including job id and status.",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "site_id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Successful Response, OK",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "site_id": {
+                            "type": "string"
+                          },
+                          "job_id": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/sites/k8s-support-host": {
+            "post": {
+              "tags": ["PAM Service"],
+              "summary": "Store the provision information in the DynamoDB table pam_site_status, including job id and status.",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "site_id": {
+                          "type": "string"
+                        },
+                        "platform": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Successful Response, OK",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "site_id": {
+                            "type": "string"
+                          },
+                          "platform": {
+                            "type": "string"
+                          },
+                          "region": {
+                            "type": "string"
+                          },
+                          "job_id": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/sites/db-support-host": {
+            "post": {
+              "tags": ["PAM Service"],
+              "summary": "Store the provision information in the DynamoDB table pam_site_status, including job id and status.",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "site_id": {
+                          "type": "string"
+                        },
+                        "platform": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Successful Response, OK",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "site_id": {
+                            "type": "string"
+                          },
+                          "platform": {
+                            "type": "string"
+                          },
+                          "region": {
+                            "type": "string"
+                          },
+                          "job_id": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+
+      // Build a system
+      const ui = SwaggerUIBundle({
+        spec: spec,
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        defaultModelRendering: "model",
+        defaultModelExpandDepth: 3,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "StandaloneLayout"
+      })
+
+      window.ui = ui
+    }
+  </script>
+</body>
+
+</html>
